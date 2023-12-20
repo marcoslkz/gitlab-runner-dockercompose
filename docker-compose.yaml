@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  runner:
+    restart: always
+    image: registry.gitlab.com/gitlab-org/gitlab-runner:alpine
+    depends_on:
+      - register-runner
+    environment:
+      DOCKER_TLS_CERTDIR: "/cert"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - config:/etc/gitlab-runner:z
+      - /opt/cecierj/:/opt/cecierj/
+      - cert:/cert
+
+  register-runner:
+    restart: 'no'
+    image: registry.gitlab.com/gitlab-org/gitlab-runner:alpine
+    environment:
+      - CI_SERVER_URL=${CI_SERVER_URL}
+      - REGISTRATION_TOKEN=${REGISTRATION_TOKEN}
+    command:
+      - test -f /etc/gitlab-runner/config.toml	 || 
+      - register
+      - --non-interactive
+      - --locked=true
+      - --name=${RUNNER_NAME}
+      - --executor=docker
+      - --docker-image=docker
+      - --docker-volumes=/var/run/docker.sock:/var/run/docker.sock
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - config:/etc/gitlab-runner:z
+
+
+
+volumes:
+  cert:
+  config:
+
+networks:
+  default:
+    name: proxy_default
+    external: true
