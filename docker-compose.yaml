@@ -11,7 +11,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - config:/etc/gitlab-runner:z
-      - /opt/cecierj/:/opt/cecierj/
+      - /opt/files/:/opt/files/
       - cert:/cert
 
   register-runner:
@@ -27,7 +27,7 @@ services:
       - --name=${RUNNER_NAME}
       - --executor=docker
       - --docker-image=docker
-      - --docker-volumes=/var/run/docker.sock:/var/run/docker.sock
+      - --docker-volumes=/var/run/docker.sock:/var/run/docker.sock,/opt/files/:/opt/files/
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - config:/etc/gitlab-runner:z
