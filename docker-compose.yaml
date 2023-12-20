@@ -21,7 +21,6 @@ services:
       - CI_SERVER_URL=${CI_SERVER_URL}
       - REGISTRATION_TOKEN=${REGISTRATION_TOKEN}
     command:
-      - test -f /etc/gitlab-runner/config.toml	 || 
       - register
       - --non-interactive
       - --locked=true
